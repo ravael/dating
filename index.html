@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Jogo do Coração Mágico</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #FFEBE6; /* Background rosa claro */
+        }
+        canvas {
+            display: block;
+        }
+        .title {
+            position: absolute;
+            /*bottom: 10px;*/
+            top: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: 'Handjet', cursive;
+            font-size: 21px;
+            color: chocolate;
+        }
+        .title2 {
+            position: absolute;
+            top: 90px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: 'Handjet', cursive;
+            font-size: 21px;
+            color: chocolate;
+        }
+        .win {
+            position: absolute;
+            top: 150px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: 'Sarabun', sans-serif;
+            font-size: 28px;
+            color: chocolate;
+        }
+        .score {
+            position: absolute;
+            top: 150px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: 'Handjet', cursive;
+            font-size: 21px;
+            color: black;
+        }
+    </style>
+</head>
+<body>
+<canvas id="gameCanvas"></canvas>
+<div class="title">Tribunal Regional Cheio de Reuniões</div>
+<div class="title2">Acerte o coração 5 vezes para um prêmio misterioso.</div>
+<div id="score" class="score"></div>
+
+<div id="divWin" class="win" hidden="true">
+
+    <img style="margin-left: 35%;" src="https://img1.picmix.com/output/stamp/normal/8/1/6/9/369618_550ed.gif" alt="this slowpoke moves"  width="250" />
+
+    <div style="margin-left: 40%;">PARABÉNS!!!</div>
+    <div>Encaminhe o seu @insta para o desenvolvedor para descobrir o seu prêmio.</div>
+</div>
+<script>
+    const canvas = document.getElementById("gameCanvas");
+    const ctx = canvas.getContext("2d");
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    let heartX = Math.random() * (canvas.width - 50);
+    let heartY = Math.random() * (canvas.height - 50);
+    let clicks = 0;
+    const maxClicks = 5;
+
+    const heart = new Image();
+    heart.src = "https://opengameart.org/sites/default/files/heart%20pixel%20art%20254x254.png"; // Insira o caminho para a imagem do coração
+
+
+    const congrats = new Image();
+    congrats.src = "https://pixelartmaker-data-78746291193.nyc3.digitaloceanspaces.com/image/1fc6b51b57165f9.png";
+
+    let win = false;
+
+    setInterval(moveHeart, 1500); // Move o coração a cada segundo
+
+    canvas.addEventListener("click", function(event) {
+        const mouseX = event.clientX;
+        const mouseY = event.clientY;
+
+        if (mouseX >= heartX && mouseX <= heartX + 50 &&
+            mouseY >= heartY && mouseY <= heartY + 50) {
+            clicks++;
+            showClicksAnimation(clicks);
+            if (clicks === maxClicks) {
+                showCongratulations();
+            } else {
+                moveHeart();
+            }
+        }
+    });
+
+    function showClicksAnimation(count) {
+        let elementById = document.getElementById("score");
+        elementById.innerHTML = `Clique: ${clicks}`
+    }
+
+
+    function moveHeart() {
+        heartX = Math.random() * (canvas.width - 50);
+        heartY = Math.random() * (canvas.height - 50);
+        drawScene();
+    }
+
+    function drawScene() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(heart, heartX, heartY, 50, 50);
+        showClicksAnimation(clicks);
+
+    }
+
+    function showCongratulations(){
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        let elementById = document.getElementById("score");
+        elementById.hidden = true;
+        let divWin = document.getElementById("divWin");
+        divWin.hidden = false;
+        // drawScene();
+    }
+
+    heart.onload = function() {
+        drawScene();
+    };
+
+    // Atualize o tamanho do canvas quando a janela for redimensionada
+    window.addEventListener('resize', function() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        clicks = 0;
+        drawScene();
+    });
+</script>
+</body>
+</html>
